@@ -15,6 +15,8 @@ class ProductController extends Controller
     public function index()
     {
         //
+        $products = Product::get();
+        return response()->json($products);
     }
 
     /**
@@ -52,6 +54,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         //
+        return response()->json($product, 200);
     }
 
     /**
@@ -75,6 +78,12 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         //
+        print($request);
+        
+        if($request->input('name') != null){$product->{'name'} = $request->input('name');}
+        if($request->input('price') != null){$product->{'price'} = $request->input('price');}
+        $product->save();
+        return response()->json($product, 200);
     }
 
     /**
@@ -86,5 +95,10 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+        $body = json_decode($product);
+        $id = $body->{'id'};
+        Product::destroy($id);
+        return response()->json(204);
+
     }
 }

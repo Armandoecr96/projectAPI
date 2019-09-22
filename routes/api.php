@@ -23,8 +23,10 @@ Route::get('/greeting', function( Request $request) {
 
 Route::post('products', "ProductController@store");
 
-Route::get('products', "ProductController@store");
+Route::get('products', "ProductController@index");
 
-Route::delete('products', "ProductController@store");
+Route::get('products/{product}', "ProductController@show");
 
-Route::put('products', "ProductController@store");
+Route::put('products/{product}', "ProductController@update");
+
+Route::delete('products/{product}', "ProductController@destroy");

@@ -8,15 +8,47 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProductUpdateTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testExample()
+    use RefreshDatabase;
+    
+    public function test_client_can_update_a_product()
     {
-        $response = $this->get('/');
+    // Given
+    $productData = [
+        'name' => 'Super Product Update',
+        'price' => '26.30'
+    ];
 
-        $response->assertStatus(200);
-    }
+    // When
+    $response = $this->json('POST', '/api/products', $productData); 
+
+    // Then
+    // Assert it sends the correct HTTP Status
+    $response->assertStatus(200);
+    
+    // Assert the response has the correct structure
+    $response->assertJsonStructure([
+        'id',
+        'name',
+        'price'
+    ]);
+
+    // Assert the product was created
+    // with the correct data
+    $response->assertJsonFragment([
+        'name' => 'Super Product Update',
+        'price' => '26.30'
+    ]);
+    
+    $body = $response->decodeResponseJson();
+
+    // Assert product is on the database
+    $this->assertDatabaseHas(
+        'products',
+        [
+            'id' => $body['id'],
+            'name' => 'Super Product Update',
+            'price' => '26.30'
+        ]
+    );
+}
 }
