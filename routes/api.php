@@ -27,6 +27,6 @@ Route::get('products', "ProductController@index");
 
 Route::get('products/{product}', "ProductController@show");
 
-Route::put('products/{product}', "ProductController@update");
+Route::put('products/{id}', "ProductController@update");
 
 Route::delete('products/{product}', "ProductController@destroy");
