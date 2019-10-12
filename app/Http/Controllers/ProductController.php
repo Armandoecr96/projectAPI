@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\Http\Resources\ProductCollection as ProductCollectionResouce;
+use App\Http\Resources\Product as ProductResource;
 use Illuminate\Http\Request;
 use App\Http\Requests\CrearProductRequest;
 use App\Http\Requests\EditProductRequest;
@@ -17,7 +19,7 @@ class ProductController extends Controller
     public function index()
     {
         //
-        $products = Product::get();
+        $products = ProductResource::collection(Product::all());
         return response()->json($products, 200);
     }
 
@@ -41,6 +43,7 @@ class ProductController extends Controller
     {
         // Create a new product
         $product = Product::create($request->all());
+        $product = new ProductResource($product);
         
 
         // Return a response with a product json
@@ -58,7 +61,7 @@ class ProductController extends Controller
     {
         $response = '';
         $status = 500;
-        $product = Product::find($id);
+        $product = new ProductResource(Product::find($id));
         if($product != null) {
             $response = $product;
             $status = 200;
@@ -96,7 +99,7 @@ class ProductController extends Controller
             $product->fill($request->all());
             $product->save();
             $status = 200;
-            $response = $product;
+            $response = ProductResource::collection($product);
         } else {
             $response = ['errors' => ['code' => 'ERROR-2', 'title' => 'Not Found']];
             $status = 404;

@@ -23,7 +23,10 @@ class CrearProductRequest extends FormRequest
      */
     public function rules()
     {
+        $request = \json_decode($this->getContent());
+        var_dump($request->data->type);
         return [
+            $request->data->type => 'required|string',
             'name' => 'required|string',
             'price' => 'required|numeric|major'
         ];
@@ -37,6 +40,7 @@ class CrearProductRequest extends FormRequest
     public function messages() 
     {
         return[
+            'type.required' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
             'name.required' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
             'price.required' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
             'price.numeric' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],

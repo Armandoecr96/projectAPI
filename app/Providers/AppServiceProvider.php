@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Validator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Http\Resources\Json\Resource;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,8 +25,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Resource::withoutWrapping();
+        
         Validator::extend('major', function($attribute, $value, $parameters, $validator) {
             return $value > 0.0;
         });
+
     }
 }
