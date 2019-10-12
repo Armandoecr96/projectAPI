@@ -13,10 +13,13 @@ class ProductDeleteTest extends TestCase
      *
      * @return void
      */
-    public function testExample()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
+    public function test_client_can_delete_a_product()
+    {        
+                // When
+                $response = $this->json('POST', '/api/products/1'); 
+        
+                // Then
+                // Assert it sends the correct HTTP Status
+                $response->assertStatus(204);
     }
 }
