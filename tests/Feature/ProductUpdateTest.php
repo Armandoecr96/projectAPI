@@ -23,7 +23,7 @@ class ProductUpdateTest extends TestCase
 
     // Then
     // Assert it sends the correct HTTP Status
-    $response->assertStatus(200);
+    $response->assertStatus(201);
     
     // Assert the response has the correct structure
     $response->assertJsonStructure([

@@ -12,6 +12,9 @@ class ProductTest extends TestCase
 {
     use RefreshDatabase;
     
+    /**
+     * CREATE-1
+     */
     public function test_client_can_create_a_product()
     {
         // Given

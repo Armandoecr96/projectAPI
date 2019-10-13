@@ -16,7 +16,7 @@ class ProductDeleteTest extends TestCase
     public function test_client_can_delete_a_product()
     {        
                 // When
-                $response = $this->json('POST', '/api/products/1'); 
+                $response = $this->json('DELETE', '/api/products/3'); 
         
                 // Then
                 // Assert it sends the correct HTTP Status

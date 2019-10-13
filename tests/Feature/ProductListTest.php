@@ -19,12 +19,6 @@ class ProductListTest extends TestCase
 
         $response->assertStatus(200);
 
-        $response->assertJsonStructure([
-            'id',
-            'name',
-            'price'
-        ]);
-
         $body = $response->decodeResponseJson();
 
         $this->assertDatabaseHas(
