@@ -97,6 +97,7 @@ class ProductController extends Controller
             $product->save();
             $status = 200;
             $response = $product;
+
         } else {
             $response = ['errors' => ['code' => 'ERROR-2', 'title' => 'Not Found']];
             $status = 404;

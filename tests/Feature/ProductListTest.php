@@ -8,32 +8,51 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProductListTest extends TestCase
 {
+    use RefreshDatabase;
     /**
-     * A basic feature test example.
+     * LIST-1
      *
      * @return void
      */
     public function test_client_can_list_products()
     {
-        $response = $this->json('GET', '/api/products');
+        // Enter DATA
+        $productData = [
+            'name' => 'Super Product',
+            'price' => '23.30',
+        ];
+        $response = $this->json('POST', '/api/products', $productData);
+        $productData = [
+            'name' => 'Super Product 2',
+            'price' => '25',
+        ];
+        $response = $this->json('POST', '/api/products', $productData);
 
-        $response->assertStatus(200);
-
+        $response = $this->get('/api/products');
+        $response->dump();
         $response->assertJsonStructure([
-            'id',
+            '*' => ['id',
             'name',
-            'price'
+            'price']
         ]);
 
-        $body = $response->decodeResponseJson();
+        $response->assertJsonFragment([
+            'name' => 'Super Product',
+            'price' => '23.30'
+        ]);
+        $response->assertStatus(200);
+    }
 
-        $this->assertDatabaseHas(
-            'products',
-            [
-                'id' => $body['id'],
-                'name' => 'Super Product',
-                'price' => '23.30'
-            ]
-        );
+    /**
+     * LIST-1
+     *
+     * @return void
+     */
+    public function test_client_can_list_products_empty()
+    {
+        $response = $this->json('GET', '/api/products');
+        $response->assertJsonStructure([]);
+        $response->assertJsonFragment([]);
+        $response->assertStatus(200);
     }
 }
