@@ -8,15 +8,23 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProductShowTest extends TestCase
 {
+    use RefreshDatabase;
     /**
-     * A basic feature test example.
+     * SHOW-1
      *
      * @return void
      */
-    public function testExample()
+    public function test_client_product_show_test()
     {
-        // When
-        $response = $this->json('GET', '/api/products/2');
+        
+        $productData = [
+            'name' => 'Super Product',
+            'price' => '23.30'
+        ];
+
+        $response = $this->json('POST', '/api/products', $productData);
+
+        $response = $this->json('GET', '/api/products/1');
 
         $response->assertJsonStructure([
             'id',
@@ -44,5 +52,20 @@ class ProductShowTest extends TestCase
         // Then
         // Assert it sends the correct HTTP Status
         $response->assertStatus(200);
+    }
+
+    /**
+     * SHOW-2
+     *
+     * @return void
+     */
+    public function test_client_product_show_test_not_found()
+    {
+        $response = $this->json('GET', '/api/products/1');
+        $response->assertStatus(404);
+        $response->assertJsonFragment([
+            'code' => 'ERROR-2',
+            'title' => 'Not Found'
+        ]);
     }
 }
