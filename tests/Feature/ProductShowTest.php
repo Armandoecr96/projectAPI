@@ -18,36 +18,37 @@ class ProductShowTest extends TestCase
     {
         
         $productData = [
-            'name' => 'Super Product',
-            'price' => '23.30'
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => '23.30'
+                ]
+            ]
         ];
 
         $response = $this->json('POST', '/api/products', $productData);
-
         $response = $this->json('GET', '/api/products/1');
-
+        $response->dump();
         $response->assertJsonStructure([
-            'id',
-            'name',
-            'price'
+            'data' => [
+                'type',
+                'id',
+                'attributes' => [
+                    'name',
+                    'price'
+                ]
+            ]
         ]);
 
         $response->assertJsonFragment([
-            'name' => 'Super Product',
-            'price' => '23.30'
-        ]);
-
-        $body = $response->decodeResponseJson();
-
-        // Assert product is on the database
-        $this->assertDatabaseHas(
-            'products',
-            [
-                'id' => $body['id'],
+            'attributes' => [
                 'name' => 'Super Product',
                 'price' => '23.30'
             ]
-        );
+        ]);
+
+        $body = $response->decodeResponseJson();
 
         // Then
         // Assert it sends the correct HTTP Status

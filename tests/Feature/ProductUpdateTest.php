@@ -16,15 +16,26 @@ class ProductUpdateTest extends TestCase
     public function test_client_can_update_a_product()
     {
         $productData = [
-            'name' => 'Super Product',
-            'price' => '23.30'
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => '23.30'
+                ]
+            ]
         ];
 
         // When
         $response = $this->json('POST', '/api/products', $productData);
         // Given
         $productData = [
-            'price' => '26.30'
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => '26.60'
+                ]
+            ]
         ];
 
         // When
@@ -36,29 +47,26 @@ class ProductUpdateTest extends TestCase
 
         // Assert the response has the correct structure
         $response->assertJsonStructure([
-            'id',
-            'name',
-            'price'
+            'data' => [
+                'type',
+                'id',
+                'attributes' => [
+                    'name',
+                    'price'
+                ]
+            ]
         ]);
 
         // Assert the product was created
         // with the correct data
         $response->assertJsonFragment([
-            'name' => 'Super Product',
-            'price' => '26.30'
+            'attributes' => [
+                'name' => 'Super Product',
+                'price' => '26.60'
+            ]
         ]);
 
         $body = $response->decodeResponseJson();
-
-        // Assert product is on the database
-        $this->assertDatabaseHas(
-            'products',
-            [
-                'id' => $body['id'],
-                'name' => 'Super Product',
-                'price' => '26.30'
-            ]
-        );
     }
 
     /**
@@ -67,15 +75,26 @@ class ProductUpdateTest extends TestCase
     public function test_client_can_update_a_product_price_no_num()
     {
         $productData = [
-            'name' => 'Super Product',
-            'price' => '23.30'
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => '23.30'
+                ]
+            ]
         ];
 
         // When
         $response = $this->json('POST', '/api/products', $productData);
         // Given
         $productData = [
-            'price' => 'abs'
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => 'abs'
+                ]
+            ]
         ];
 
         // When
@@ -94,15 +113,26 @@ class ProductUpdateTest extends TestCase
     public function test_client_can_update_a_product_price_zero()
     {
         $productData = [
-            'name' => 'Super Product',
-            'price' => '23.30'
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => '23.30'
+                ]
+            ]
         ];
 
         // When
         $response = $this->json('POST', '/api/products', $productData);
         // Given
         $productData = [
-            'price' => -3
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => -3
+                ]
+            ]
         ];
 
         // When
@@ -122,7 +152,13 @@ class ProductUpdateTest extends TestCase
     {
         // Given
         $productData = [
-            'price' => '26.30'
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => '26.60'
+                ]
+            ]
         ];
 
         // When

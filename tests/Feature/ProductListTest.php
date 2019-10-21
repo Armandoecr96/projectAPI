@@ -18,27 +18,42 @@ class ProductListTest extends TestCase
     {
         // Enter DATA
         $productData = [
-            'name' => 'Super Product',
-            'price' => '23.30',
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => '23.30'
+                ]
+            ]
         ];
         $response = $this->json('POST', '/api/products', $productData);
         $productData = [
-            'name' => 'Super Product 2',
-            'price' => '25',
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Product',
+                    'price' => '25'
+                ]
+            ]
         ];
         $response = $this->json('POST', '/api/products', $productData);
-
         $response = $this->get('/api/products');
-        $response->dump();
         $response->assertJsonStructure([
-            '*' => ['id',
-            'name',
-            'price']
+            '*' => ['data' => [
+                'type',
+                'id',
+                'attributes' => [
+                    'name',
+                    'price'
+                ]
+            ]]
         ]);
 
         $response->assertJsonFragment([
-            'name' => 'Super Product',
-            'price' => '23.30'
+            'attributes' => [
+                'name' => 'Super Product',
+                'price' => '23.30'
+            ]
         ]);
         $response->assertStatus(200);
     }

@@ -27,12 +27,10 @@ class CrearProductRequest extends FormRequest
      */
     public function rules()
     {
-        $request = \json_decode($this->getContent());
-        var_dump($request->data->type);
         return [
-            $request->data->type => 'required|string',
-            'name' => 'required|string',
-            'price' => 'required|numeric|major'
+            'data.type' => 'required',
+            'data.attributes.name' => 'required|string',
+            'data.attributes.price' => 'required|numeric|major'
         ];
     }
 
@@ -41,7 +39,6 @@ class CrearProductRequest extends FormRequest
         $errors = (new ValidationException($validator))->errors();
         $errorMessage = '';
         foreach($errors as $obj) {
-            var_dump($obj);
             $errorMessage = $obj;
         }
         throw new HttpResponseException(
@@ -57,11 +54,12 @@ class CrearProductRequest extends FormRequest
     public function messages() 
     {
         return[
-            'type.required' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
-            'name.required' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
-            'price.required' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
-            'price.numeric' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
-            'price.major' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity']
+            'data.type.required' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
+            'data.attributes.type.required' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
+            'data.attributes.name.required' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
+            'data.attributes.price.required' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
+            'data.attributes.price.numeric' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
+            'data.attributes.price.major' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity']
         ];
     }
 }

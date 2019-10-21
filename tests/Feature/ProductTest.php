@@ -19,8 +19,13 @@ class ProductTest extends TestCase
     {
         // Given
         $productData = [
-            'name' => 'Super Product',
-            'price' => '23.30'
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => '23.30'
+                ]
+            ]
         ];
 
         // When
@@ -32,16 +37,23 @@ class ProductTest extends TestCase
 
         // Assert the response has the correct structure
         $response->assertJsonStructure([
-            'id',
-            'name',
-            'price'
+            'data' => [
+                'type',
+                'id',
+                'attributes' => [
+                    'name',
+                    'price'
+                ]
+            ]
         ]);
 
         // Assert the product was created
         // with the correct data
         $response->assertJsonFragment([
-            'name' => 'Super Product',
-            'price' => '23.30'
+            'attributes' => [
+                'name' => 'Super Product',
+                'price' => '23.30'
+            ]
         ]);
 
         $body = $response->decodeResponseJson();
@@ -61,9 +73,14 @@ class ProductTest extends TestCase
      * CREATE-2
      */
     public function test_client_cant_create_a_product_name()
-    { 
+    {
         $productData = [
-            'price' => '23.30'
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'price' => '23.30'
+                ]
+            ]
         ];
 
         // When
@@ -76,60 +93,77 @@ class ProductTest extends TestCase
         ]);
     }
 
-    
+
     /**
      * CREATE-3
      */
     public function test_client_cant_create_a_product_price()
-    { 
-       $productData = [
-           'name' => 'Super product'
+    {
+        $productData = [
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                ]
+            ]
         ];
 
         // When
         $response = $this->json('POST', '/api/products', $productData);
         $response->assertStatus(422);
-        
+
         $response->assertJsonFragment([
             'code' => 'ERROR-1',
             'title' => 'Unprocessable Entity'
         ]);
     }
 
-    
+
     /**
      * CREATE-4
      */
     public function test_client_cant_create_a_product_price_no_num()
-    { 
+    {
         $productData = [
-            'price' => 'abs'
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => 'abs'
+                ]
+            ]
         ];
 
         // When
         $response = $this->json('POST', '/api/products', $productData);
         $response->assertStatus(422);
-        
+
         $response->assertJsonFragment([
             'code' => 'ERROR-1',
             'title' => 'Unprocessable Entity'
         ]);
     }
 
-    
+
     /**
      * CREATE-5
      */
     public function test_client_cant_create_a_product_price_zero()
-    { 
+    {
         $productData = [
-            'price' => -5
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => -5
+                ]
+            ]
         ];
 
         // When
         $response = $this->json('POST', '/api/products', $productData);
         $response->assertStatus(422);
-        
+
         $response->assertJsonFragment([
             'code' => 'ERROR-1',
             'title' => 'Unprocessable Entity'

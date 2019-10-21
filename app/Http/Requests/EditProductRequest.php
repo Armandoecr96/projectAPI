@@ -28,8 +28,8 @@ class EditProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'price' => 'numeric|major',
-            'id' => 'exists'
+            'data.attributes.price' => 'numeric|major',
+            'data.attributes.id' => 'exists'
         ];
     }
 
@@ -53,9 +53,9 @@ class EditProductRequest extends FormRequest
     public function messages() 
     {
         return[
-            'price.required' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
-            'price.numeric' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
-            'price.major' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity']
+            'data.attributes.price.required' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
+            'data.attributes.price.numeric' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity'],
+            'data.attributes.price.major' => ['code' => 'ERROR-1', 'title' => 'Unprocessable Entity']
         ];
     }
 }

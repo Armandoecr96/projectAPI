@@ -17,8 +17,13 @@ class ProductDeleteTest extends TestCase
     public function test_client_can_delete_a_product()
     {
         $productData = [
-            'name' => 'Super Product',
-            'price' => '23.30',
+            'data' => [
+                'type' => 'product',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => '23.30'
+                ]
+            ]
         ];
         $response = $this->json('POST', '/api/products', $productData);
         $response = $this->json('DELETE', '/api/products/1');

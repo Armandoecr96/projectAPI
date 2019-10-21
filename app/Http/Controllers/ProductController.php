@@ -42,9 +42,13 @@ class ProductController extends Controller
     public function store(CrearProductRequest $request)
     {
         // Create a new product
-        $product = Product::create($request->all());
+        $product = Product::create([
+            'type' => $request->input('data.type'),
+            'name' => $request->input('data.attributes.name'),
+            'price' => $request->input('data.attributes.price')
+        ]);
         $product = new ProductResource($product);
-        
+
 
         // Return a response with a product json
         // representation and a 201 status code   
@@ -59,17 +63,14 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $response = '';
-        $status = 500;
-        $product = new ProductResource(Product::find($id));
-        if($product != null) {
-            $response = $product;
-            $status = 200;
-        } else {
-            $response = ['errors' => ['code' => 'ERROR-2', 'title' => 'Not Found']];
-            $status = 404;
+        $product = Product::find($id);
+        if (!is_null($product)){
+            return (new ProductResource($product))->response()->setStatusCode(200);
         }
-        return response()->json($response, $status);
+        else{
+            $error = ['errors' => ['code' => 'ERROR-2', 'title' => 'Not Found']];
+            return response()->json($error,404);
+        }
     }
 
     /**
@@ -92,19 +93,24 @@ class ProductController extends Controller
      */
     public function update(EditProductRequest $request, $id)
     {
+        $codeHTTP = 500;
         $response = '';
-        $status = 500;
         $product = Product::find($id);
-        if($product != null) {
-            $product->fill($request->all());
-            $product->save();
-            $status = 200;
-            $response = ProductResource::collection($product);
-        } else {
-            $response = ['errors' => ['code' => 'ERROR-2', 'title' => 'Not Found']];
-            $status = 404;
+        if (!is_null($product)){
+            $product->update([
+                'name' => $request->input('data.attributes.name'),
+                'price' => $request->input('data.attributes.price'),
+            ]);
+            $response = $product;
+            $codeHTTP = 200;
+            return (new ProductResource($product))->response()->setStatusCode(200);
         }
-        return response()->json($response, $status);
+        else{
+            $response = ['errors' => ['code' => 'ERROR-2', 'title' => 'Not Found']];
+            $codeHTTP = 404;
+        }
+
+        return response()->json($response, $codeHTTP);
     }
 
     /**
@@ -117,15 +123,21 @@ class ProductController extends Controller
     {
         $response = '';
         $status = 500;
-        $product = Product::find($id);
-        if($product != null) {
-            $status = 204;
-            Product::destroy($id);
-        } else {
+
+        try {
+            $product = Product::find($id);
+            if ($product != null) {
+                $status = 204;
+                Product::destroy($id);
+            } else {
+                $response = ['errors' => ['code' => 'ERROR-2', 'title' => 'Not Found']];
+                $status = 404;
+            }
+        } catch (\Throwable $th) {
             $response = ['errors' => ['code' => 'ERROR-2', 'title' => 'Not Found']];
             $status = 404;
-        }        
-        return response()->json($response, $status);
+        }
 
+        return response()->json($response, $status);
     }
 }
